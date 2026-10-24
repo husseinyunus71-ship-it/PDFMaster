@@ -1,0 +1,235 @@
+/* =========================================
+   PDFMASTER - RESPONSIVE STYLES
+========================================= */
+
+/* Tablets and smaller laptops */
+@media (max-width: 1000px) {
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .conversion-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+/* Tablets */
+@media (max-width: 800px) {
+
+    .navbar {
+        min-height: 66px;
+    }
+
+    .nav-links,
+    .nav-actions {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        width: 42px;
+        height: 42px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 10px;
+
+        background: var(--white);
+
+        color: var(--dark);
+
+        font-size: 22px;
+    }
+
+    .mobile-nav {
+        display: none;
+
+        flex-direction: column;
+
+        gap: 5px;
+
+        padding: 15px 4% 20px;
+
+        background: var(--white);
+
+        border-top: 1px solid var(--border);
+    }
+
+    .mobile-nav.active {
+        display: flex;
+    }
+
+    .mobile-nav a {
+        padding: 12px 10px;
+
+        border-radius: 8px;
+
+        color: var(--text);
+
+        font-weight: 600;
+
+        font-size: 14px;
+    }
+
+    .mobile-nav a:hover {
+        background: #f1f5f9;
+
+        color: var(--primary);
+    }
+
+    .mobile-nav .btn {
+        margin-top: 5px;
+
+        color: var(--white);
+
+        text-align: center;
+    }
+
+    .hero {
+        padding-top: 65px;
+    }
+
+    .features-section {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-section {
+        flex-direction: column;
+
+        text-align: center;
+
+        align-items: center;
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* Mobile phones */
+@media (max-width: 600px) {
+
+    .hero {
+        padding:
+            55px 15px
+            50px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+
+        letter-spacing: -1.5px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+
+        width: 100%;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .upload-section {
+        margin-top: 35px;
+    }
+
+    .upload-box {
+        min-height: 250px;
+
+        padding: 25px 15px;
+    }
+
+    .upload-box h2 {
+        font-size: 20px;
+    }
+
+    .tools-section {
+        padding:
+            50px 0;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .conversion-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .convert-section {
+        padding:
+            55px 20px;
+    }
+
+    .cta-section {
+        padding: 30px 20px;
+
+        margin:
+            55px auto;
+    }
+
+    .cta-section h2 {
+        font-size: 24px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 30px 20px;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* Small phones */
+@media (max-width: 400px) {
+
+    .logo-text {
+        font-size: 18px;
+    }
+
+    .logo-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .upload-box {
+        padding:
+            25px 10px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+
+}

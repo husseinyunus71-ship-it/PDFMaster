@@ -1,0 +1,801 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Text to PDF Online Free — PDFMaster</title>
+    <meta name="description" content="Create PDF documents from text with PDFMaster. Customize fonts, alignment, spacing, page size and margins.">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .document-container {
+            width: min(1050px, 92%);
+            margin: auto;
+            padding: 60px 0;
+        }
+
+        .document-heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .document-heading h1 {
+            color: #0f172a;
+            font-size: clamp(34px, 5vw, 46px);
+            margin-bottom: 12px;
+        }
+
+        .document-heading p {
+            color: #64748b;
+            max-width: 680px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        .document-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .07);
+        }
+
+        .document-card h2 {
+            color: #0f172a;
+            font-size: 19px;
+            margin: 0 0 16px;
+        }
+
+        .document-section {
+            margin-bottom: 28px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .control {
+            flex: 1 1 145px;
+            min-width: 0;
+        }
+
+        .control label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        .control select,
+        .control input {
+            display: block;
+            width: 100%;
+            min-height: 43px;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fff;
+            color: #1e293b;
+        }
+
+        .format-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 17px;
+        }
+
+        .format-button {
+            width: 43px;
+            height: 40px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 8px;
+            color: #1e293b;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .format-button[aria-pressed="true"] {
+            color: #1d4ed8;
+            background: #eff6ff;
+            border-color: #60a5fa;
+        }
+
+        .format-button:focus-visible,
+        .document-button:focus-visible {
+            outline: 3px solid #93c5fd;
+            outline-offset: 2px;
+        }
+
+        .editor-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .editor-label h2 { margin: 0; }
+
+        #documentText {
+            width: 100%;
+            min-height: 340px;
+            display: block;
+            padding: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            resize: vertical;
+            background: white;
+            color: #1e293b;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        #documentText:focus {
+            outline: 3px solid rgba(37, 99, 235, .12);
+            border-color: #2563eb;
+        }
+
+        .editor-help,
+        .settings-help {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .document-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .document-button {
+            min-height: 44px;
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary-button {
+            border: 0;
+            color: white;
+            background: #2563eb;
+        }
+
+        .primary-button:hover { background: #1d4ed8; }
+
+        .secondary-button {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #1e293b;
+        }
+
+        .secondary-button:hover { background: #f1f5f9; }
+
+        .document-button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .document-status {
+            display: none;
+            padding: 14px;
+            border-radius: 9px;
+            margin-top: 22px;
+            text-align: center;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .document-status.show { display: block; }
+        .document-status.success { background: #f0fdf4; color: #166534; }
+        .document-status.error { background: #fef2f2; color: #b91c1c; }
+        .document-status.processing { background: #eff6ff; color: #1d4ed8; }
+
+        .privacy-note {
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .document-container { padding: 35px 0; }
+            .document-card { padding: 18px; }
+            #documentText { min-height: 280px; padding: 13px; }
+            .document-actions { flex-direction: column; }
+            .document-actions button { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="document-container">
+
+    <header class="document-heading">
+        <h1>Text to PDF</h1>
+        <p>
+            Turn your text into a downloadable PDF document.
+            Customize the font, text appearance, alignment,
+            margins and page layout.
+        </p>
+    </header>
+
+    <section class="document-card">
+
+        <div class="document-section">
+            <h2>Text formatting</h2>
+
+            <div class="toolbar">
+
+                <div class="control">
+                    <label for="fontFamily">Font family</label>
+                    <select id="fontFamily">
+                        <option value="Helvetica">Helvetica / Sans-serif</option>
+                        <option value="TimesRoman">Times Roman / Serif</option>
+                        <option value="Courier">Courier / Monospace</option>
+                    </select>
+                </div>
+
+                <div class="control">
+                    <label for="fontSize">Font size</label>
+                    <select id="fontSize">
+                        <option value="10">10 pt</option>
+                        <option value="11">11 pt</option>
+                        <option value="12" selected>12 pt</option>
+                        <option value="14">14 pt</option>
+                        <option value="16">16 pt</option>
+                        <option value="18">18 pt</option>
+                        <option value="24">24 pt</option>
+                        <option value="36">36 pt</option>
+                    </select>
+                </div>
+
+                <div class="control">
+                    <label for="alignment">Alignment</label>
+                    <select id="alignment">
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+
+                <div class="control">
+                    <label for="lineSpacing">Line spacing</label>
+                    <select id="lineSpacing">
+                        <option value="1">Single</option>
+                        <option value="1.15" selected>1.15</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2">Double</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="format-buttons" aria-label="Text appearance">
+
+                <button type="button" class="format-button"
+                    data-format="bold" aria-pressed="false"
+                    aria-label="Toggle bold" title="Bold">
+                    <strong>B</strong>
+                </button>
+
+                <button type="button" class="format-button"
+                    data-format="italic" aria-pressed="false"
+                    aria-label="Toggle italic" title="Italic">
+                    <em>I</em>
+                </button>
+
+                <button type="button" class="format-button"
+                    data-format="underline" aria-pressed="false"
+                    aria-label="Toggle underline" title="Underline">
+                    <span style="text-decoration:underline">U</span>
+                </button>
+
+            </div>
+
+            <p class="settings-help">
+                These appearance controls apply to the entire document
+                in this version, rather than to individually selected words.
+            </p>
+        </div>
+
+        <div class="document-section">
+            <h2>Page layout</h2>
+
+            <div class="toolbar">
+
+                <div class="control">
+                    <label for="pageSize">Paper size</label>
+                    <select id="pageSize">
+                        <option value="A4" selected>A4</option>
+                        <option value="Letter">US Letter</option>
+                    </select>
+                </div>
+
+                <div class="control">
+                    <label for="orientation">Orientation</label>
+                    <select id="orientation">
+                        <option value="portrait" selected>Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+
+                <div class="control">
+                    <label for="margins">Margins</label>
+                    <select id="margins">
+                        <option value="15">Narrow — 15 mm</option>
+                        <option value="20" selected>Normal — 20 mm</option>
+                        <option value="25">Wide — 25 mm</option>
+                        <option value="30">Extra wide — 30 mm</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="document-section">
+            <div class="editor-label">
+                <h2>Your document</h2>
+                <span id="characterCount" class="output-meta">0 characters</span>
+            </div>
+
+            <textarea
+                id="documentText"
+                placeholder="Type or paste your text here...
+
+For example:
+
+My First PDF Document
+
+This document was created using PDFMaster.
+
+You can write multiple paragraphs. Long documents will automatically continue onto additional pages."
+                spellcheck="true"
+                aria-label="Text to convert into a PDF"
+            ></textarea>
+
+            <p class="editor-help">
+                Use a blank line to separate paragraphs. Long lines and
+                long documents are automatically wrapped across pages.
+            </p>
+        </div>
+
+        <div class="document-actions">
+
+            <button type="button" class="document-button primary-button"
+                id="generateButton">
+                Generate PDF
+            </button>
+
+            <button type="button" class="document-button secondary-button"
+                id="clearButton">
+                Clear Text
+            </button>
+
+        </div>
+
+        <div class="document-status" id="status"
+            role="status" aria-live="polite"></div>
+
+        <p class="privacy-note">
+            Your text is processed locally in your browser.
+            This tool does not upload your document to a PDFMaster server.
+        </p>
+
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script>
+(() => {
+    "use strict";
+
+    const textArea = document.getElementById("documentText");
+    const fontFamily = document.getElementById("fontFamily");
+    const fontSize = document.getElementById("fontSize");
+    const alignment = document.getElementById("alignment");
+    const lineSpacing = document.getElementById("lineSpacing");
+    const pageSize = document.getElementById("pageSize");
+    const orientation = document.getElementById("orientation");
+    const margins = document.getElementById("margins");
+    const generateButton = document.getElementById("generateButton");
+    const clearButton = document.getElementById("clearButton");
+    const characterCount = document.getElementById("characterCount");
+    const status = document.getElementById("status");
+
+    const formatOptions = {
+        bold: false,
+        italic: false,
+        underline: false
+    };
+
+    let busy = false;
+
+    function showStatus(message, type = "processing") {
+        status.textContent = message;
+        status.className = `document-status show ${type}`;
+    }
+
+    function clearStatus() {
+        status.textContent = "";
+        status.className = "document-status";
+    }
+
+    function updateCharacterCount() {
+        const length = textArea.value.length;
+        characterCount.textContent =
+            `${length.toLocaleString()} character${length === 1 ? "" : "s"}`;
+    }
+
+    function updatePreview() {
+        const selectedSize = Number(fontSize.value);
+
+        textArea.style.fontFamily = {
+            Helvetica: "Arial, sans-serif",
+            TimesRoman: "Georgia, serif",
+            Courier: "Consolas, monospace"
+        }[fontFamily.value];
+
+        textArea.style.fontSize = `${selectedSize}px`;
+        textArea.style.fontWeight = formatOptions.bold ? "700" : "400";
+        textArea.style.fontStyle = formatOptions.italic ? "italic" : "normal";
+        textArea.style.textDecoration =
+            formatOptions.underline ? "underline" : "none";
+        textArea.style.textAlign = alignment.value;
+        textArea.style.lineHeight = lineSpacing.value;
+
+        document.querySelectorAll("[data-format]").forEach(button => {
+            button.setAttribute(
+                "aria-pressed",
+                String(formatOptions[button.dataset.format])
+            );
+        });
+    }
+
+    function getSelectedFont() {
+        const family = fontFamily.value;
+        const bold = formatOptions.bold;
+        const italic = formatOptions.italic;
+
+        const key = family === "TimesRoman"
+            ? "TimesRoman"
+            : family;
+
+        const variants = {
+            Helvetica: {
+                normal: PDFLib.StandardFonts.Helvetica,
+                bold: PDFLib.StandardFonts.HelveticaBold,
+                italic: PDFLib.StandardFonts.HelveticaOblique,
+                boldItalic: PDFLib.StandardFonts.HelveticaBoldOblique
+            },
+            TimesRoman: {
+                normal: PDFLib.StandardFonts.TimesRoman,
+                bold: PDFLib.StandardFonts.TimesRomanBold,
+                italic: PDFLib.StandardFonts.TimesRomanItalic,
+                boldItalic: PDFLib.StandardFonts.TimesRomanBoldItalic
+            },
+            Courier: {
+                normal: PDFLib.StandardFonts.Courier,
+                bold: PDFLib.StandardFonts.CourierBold,
+                italic: PDFLib.StandardFonts.CourierOblique,
+                boldItalic: PDFLib.StandardFonts.CourierBoldOblique
+            }
+        };
+
+        const selected = variants[key];
+
+        if (bold && italic) return selected.boldItalic;
+        if (bold) return selected.bold;
+        if (italic) return selected.italic;
+        return selected.normal;
+    }
+
+    function millimetresToPoints(mm) {
+        return mm * 72 / 25.4;
+    }
+
+    function getPageDimensions() {
+        let width;
+        let height;
+
+        if (pageSize.value === "Letter") {
+            width = 612;
+            height = 792;
+        } else {
+            width = 595.28;
+            height = 841.89;
+        }
+
+        if (orientation.value === "landscape") {
+            [width, height] = [height, width];
+        }
+
+        return { width, height };
+    }
+
+    function wrapParagraph(paragraph, font, size, maxWidth) {
+        if (paragraph.length === 0) {
+            return [""];
+        }
+
+        const result = [];
+        const words = paragraph.trim().split(/\s+/);
+        let currentLine = "";
+
+        for (const word of words) {
+            const candidate = currentLine
+                ? `${currentLine} ${word}`
+                : word;
+
+            if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+                currentLine = candidate;
+                continue;
+            }
+
+            if (currentLine) {
+                result.push(currentLine);
+                currentLine = "";
+            }
+
+            if (font.widthOfTextAtSize(word, size) <= maxWidth) {
+                currentLine = word;
+                continue;
+            }
+
+            // Break an exceptionally long word if necessary.
+            let chunk = "";
+
+            for (const character of Array.from(word)) {
+                const candidateChunk = chunk + character;
+
+                if (
+                    chunk &&
+                    font.widthOfTextAtSize(candidateChunk, size) > maxWidth
+                ) {
+                    result.push(chunk);
+                    chunk = character;
+                } else {
+                    chunk = candidateChunk;
+                }
+            }
+
+            currentLine = chunk;
+        }
+
+        if (currentLine) {
+            result.push(currentLine);
+        }
+
+        return result;
+    }
+
+    function wrapDocument(text, font, size, maxWidth) {
+        const normalized = text
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n")
+            .replace(/\t/g, "    ");
+
+        const paragraphs = normalized.split("\n");
+        const result = [];
+
+        for (const paragraph of paragraphs) {
+            result.push(
+                ...wrapParagraph(paragraph, font, size, maxWidth)
+            );
+        }
+
+        return result;
+    }
+
+    async function generatePDF() {
+        if (busy) return;
+
+        const documentText = textArea.value.trim();
+
+        if (!documentText) {
+            showStatus("Please enter some text before generating your PDF.", "error");
+            textArea.focus();
+            return;
+        }
+
+        if (!window.PDFLib) {
+            showStatus(
+                "The PDF library did not load. Check your internet connection and refresh the page.",
+                "error"
+            );
+            return;
+        }
+
+        busy = true;
+        generateButton.disabled = true;
+        clearButton.disabled = true;
+
+        try {
+            showStatus("Preparing your document...", "processing");
+
+            const pdf = await PDFLib.PDFDocument.create();
+            const font = await pdf.embedFont(getSelectedFont());
+            const size = Number(fontSize.value);
+            const spacing = Number(lineSpacing.value);
+            const margin = millimetresToPoints(Number(margins.value));
+            const dimensions = getPageDimensions();
+
+            const pageWidth = dimensions.width;
+            const pageHeight = dimensions.height;
+            const contentWidth = pageWidth - margin * 2;
+            const lineHeight = size * spacing;
+
+            if (contentWidth <= 0 || pageHeight - margin * 2 <= size) {
+                throw new Error("The chosen page layout leaves too little space for text.");
+            }
+
+            const lines = wrapDocument(
+                documentText,
+                font,
+                size,
+                contentWidth
+            );
+
+            let page = pdf.addPage([pageWidth, pageHeight]);
+            let y = pageHeight - margin - size;
+
+            for (let index = 0; index < lines.length; index++) {
+                if (y < margin + size * 0.2) {
+                    page = pdf.addPage([pageWidth, pageHeight]);
+                    y = pageHeight - margin - size;
+                }
+
+                const line = lines[index];
+
+                if (line !== "") {
+                    const textWidth = font.widthOfTextAtSize(line, size);
+                    let x = margin;
+
+                    if (alignment.value === "center") {
+                        x = (pageWidth - textWidth) / 2;
+                    } else if (alignment.value === "right") {
+                        x = pageWidth - margin - textWidth;
+                    }
+
+                    page.drawText(line, {
+                        x,
+                        y,
+                        size,
+                        font,
+                        color: PDFLib.rgb(0.12, 0.16, 0.23)
+                    });
+
+                    if (formatOptions.underline) {
+                        page.drawLine({
+                            start: { x, y: y - size * 0.12 },
+                            end: { x: x + textWidth, y: y - size * 0.12 },
+                            thickness: Math.max(0.5, size / 18),
+                            color: PDFLib.rgb(0.12, 0.16, 0.23)
+                        });
+                    }
+                }
+
+                y -= lineHeight;
+
+                if (index % 100 === 0 && index > 0) {
+                    showStatus(
+                        `Laying out your document... ${index} of ${lines.length} lines`,
+                        "processing"
+                    );
+                }
+            }
+
+            showStatus("Preparing your PDF for download...", "processing");
+
+            const pdfBytes = await pdf.save();
+            const blob = new Blob([pdfBytes], {
+                type: "application/pdf"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "PDFMaster-Document.pdf";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+            showStatus(
+                `PDF created successfully. Your document contains ${pdf.getPageCount()} page${pdf.getPageCount() === 1 ? "" : "s"}.`,
+                "success"
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            const message = String(error?.message || "");
+
+            if (
+                message.toLowerCase().includes("encode") ||
+                message.toLowerCase().includes("font")
+            ) {
+                showStatus(
+                    "PDF creation failed because the selected built-in font may not support one or more characters. Remove unsupported symbols, such as emoji, and try again. Extended Unicode font embedding can be added later.",
+                    "error"
+                );
+            } else {
+                showStatus(
+                    "We couldn't generate the PDF. Check your settings and text, then try again.",
+                    "error"
+                );
+            }
+
+        } finally {
+            busy = false;
+            generateButton.disabled = false;
+            clearButton.disabled = false;
+        }
+    }
+
+    textArea.addEventListener("input", updateCharacterCount);
+
+    [
+        fontFamily,
+        fontSize,
+        alignment,
+        lineSpacing
+    ].forEach(control => {
+        control.addEventListener("change", updatePreview);
+    });
+
+    document.querySelectorAll("[data-format]").forEach(button => {
+        button.addEventListener("click", () => {
+            const format = button.dataset.format;
+            formatOptions[format] = !formatOptions[format];
+            updatePreview();
+        });
+    });
+
+    generateButton.addEventListener("click", generatePDF);
+
+    clearButton.addEventListener("click", () => {
+        if (busy) return;
+
+        textArea.value = "";
+        updateCharacterCount();
+        clearStatus();
+        textArea.focus();
+    });
+
+    updateCharacterCount();
+    updatePreview();
+})();
+</script>
+</body>
+</html>

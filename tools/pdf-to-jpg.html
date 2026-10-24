@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PDF to JPG Online Free — PDFMaster</title>
+
+    <meta
+        name="description"
+        content="Convert PDF pages to JPG images online with PDFMaster. Preview pages, choose image quality, and download your JPG files."
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/responsive.css"
+    >
+
+    <style>
+
+        .convert-page {
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+
+        .convert-container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+            padding: 80px 0;
+        }
+
+        .tool-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tool-header h1 {
+            font-size: 46px;
+            color: #0f172a;
+            margin-bottom: 14px;
+        }
+
+        .tool-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .tool-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 45px 20px;
+            text-align: center;
+            transition: 0.2s ease;
+        }
+
+        .upload-box.drag-over {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .upload-icon-jpg {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        .upload-box h2 {
+            color: #0f172a;
+            margin-bottom: 7px;
+        }
+
+        .upload-box p {
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        #pdfInput {
+            display: none;
+        }
+
+        .choose-btn {
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #ffffff;
+            padding: 13px 24px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .choose-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-name {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .file-meta {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .settings {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .settings.show {
+            display: block;
+        }
+
+        .settings h2 {
+            color: #0f172a;
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .setting-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+            background: #ffffff;
+        }
+
+        .setting-box label {
+            display: block;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 9px;
+        }
+
+        .setting-box select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #1e293b;
+        }
+
+        .page-mode {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mode-button {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .mode-button.active {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: #2563eb;
+        }
+
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .preview-header h2 {
+            color: #0f172a;
+            font-size: 22px;
+        }
+
+        .selection-info {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .page-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+            cursor: pointer;
+            transition:
+                border-color 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .page-card:hover {
+            transform: translateY(-2px);
+            border-color: #93c5fd;
+        }
+
+        .page-card.selected {
+            border-color: #2563eb;
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .page-preview {
+            width: 100%;
+            aspect-ratio: 0.72;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .page-preview canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .page-footer {
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .page-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .page-check {
+            width: 17px;
+            height: 17px;
+            accent-color: #2563eb;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .small-btn {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .small-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .convert-btn {
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #ffffff;
+            padding: 14px 28px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .convert-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 14px 28px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .status {
+            display: none;
+            margin-top: 24px;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.processing {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .status.success {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .status.error {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 900px) {
+
+            .page-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .convert-container {
+                padding: 50px 0;
+            }
+
+            .tool-header h1 {
+                font-size: 34px;
+            }
+
+            .tool-card {
+                padding: 20px;
+            }
+
+            .page-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="convert-page">
+
+        <div class="convert-container">
+
+            <div class="tool-header">
+
+                <h1>PDF to JPG</h1>
+
+                <p>
+                    Convert PDF pages into JPG images directly
+                    in your browser. Choose the pages and image
+                    quality you need.
+                </p>
+
+            </div>
+
+
+            <section class="tool-card">
+
+                <!-- Upload -->
+
+                <div
+                    class="upload-box"
+                    id="uploadBox"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Upload PDF"
+                >
+
+                    <div class="upload-icon-jpg">
+                        JPG
+                    </div>
+
+                    <h2>
+                        Drop your PDF here
+                    </h2>
+
+                    <p>
+                        or choose a PDF file from your computer
+                    </p>
+
+                    <input
+                        type="file"
+                        id="pdfInput"
+                        accept="application/pdf,.pdf"
+                    >
+
+                    <button
+                        type="button"
+                        class="choose-btn"
+                        id="chooseButton"
+                    >
+                        Choose PDF
+                    </button>
+
+                </div>
+
+
+                <!-- File Information -->
+
+                <div
+                    class="file-info"
+                    id="fileInfo"
+                >
+
+                    <div
+                        class="file-name"
+                        id="fileName"
+                    ></div>
+
+                    <div
+                        class="file-meta"
+                        id="fileMeta"
+                    ></div>
+
+                </div>
+
+
+                <!-- Settings -->
+
+                <div
+                    class="settings"
+                    id="settings"
+                >
+
+                    <h2>
+                        Conversion Settings
+                    </h2>
+
+                    <div class="settings-grid">
+
+                        <div class="setting-box">
+
+                            <label for="qualitySelect">
+                                Image Quality
+                            </label>
+
+                            <select id="qualitySelect">
+
+                                <option value="1">
+                                    Low — smaller files
+                                </option>
+
+                                <option
+                                    value="1.5"
+                                    selected
+                                >
+                                    Recommended
+                                </option>
+
+                                <option value="2">
+                                    High — sharper images
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="setting-box">
+
+                            <label>
+                                Pages to Convert
+                            </label>
+
+                            <div class="page-mode">
+
+                                <button
+                                    type="button"
+                                    class="mode-button active"
+                                    id="allPagesButton"
+                                >
+                                    All Pages
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="mode-button"
+                                    id="selectedPagesButton"
+                                >
+                                    Selected Pages
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Preview -->
+
+                <div
+                    class="preview-section"
+                    id="previewSection"
+                >
+
+                    <div class="preview-header">
+
+                        <div>
+
+                            <h2>
+                                Page Preview
+                            </h2>
+
+                            <div
+                                class="selection-info"
+                                id="selectionInfo"
+                            >
+                                All pages selected
+                            </div>
+
+                        </div>
+
+                        <div class="preview-controls">
+
+                            <button
+                                type="button"
+                                class="small-btn"
+                                id="selectAllButton"
+                            >
+                                Select All
+                            </button>
+
+                            <button
+                                type="button"
+                                class="small-btn"
+                                id="clearButton"
+                            >
+                                Clear
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="page-grid"
+                        id="pageGrid"
+                    ></div>
+
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="actions">
+
+                    <button
+                        type="button"
+                        class="convert-btn"
+                        id="convertButton"
+                        disabled
+                    >
+                        Convert to JPG
+                    </button>
+
+                    <button
+                        type="button"
+                        class="reset-btn"
+                        id="resetButton"
+                    >
+                        Start Again
+                    </button>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div
+                    class="status"
+                    id="status"
+                ></div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- PDF.JS -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+        type="module"
+    ></script>
+
+
+    <!-- JSZIP -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+    ></script>
+
+
+    <script type="module">
+
+        import * as pdfjsLib from
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+
+        const pdfInput =
+            document.getElementById("pdfInput");
+
+        const chooseButton =
+            document.getElementById("chooseButton");
+
+        const uploadBox =
+            document.getElementById("uploadBox");
+
+        const fileInfo =
+            document.getElementById("fileInfo");
+
+        const fileName =
+            document.getElementById("fileName");
+
+        const fileMeta =
+            document.getElementById("fileMeta");
+
+        const settings =
+            document.getElementById("settings");
+
+        const previewSection =
+            document.getElementById("previewSection");
+
+        const pageGrid =
+            document.getElementById("pageGrid");
+
+        const allPagesButton =
+            document.getElementById("allPagesButton");
+
+        const selectedPagesButton =
+            document.getElementById("selectedPagesButton");
+
+        const selectAllButton =
+            document.getElementById("selectAllButton");
+
+        const clearButton =
+            document.getElementById("clearButton");
+
+        const selectionInfo =
+            document.getElementById("selectionInfo");
+
+        const convertButton =
+            document.getElementById("convertButton");
+
+        const resetButton =
+            document.getElementById("resetButton");
+
+        const qualitySelect =
+            document.getElementById("qualitySelect");
+
+        const status =
+            document.getElementById("status");
+
+
+        let selectedFile = null;
+
+        let pdfDocument = null;
+
+        let pages = [];
+
+        let selectedPages = new Set();
+
+        let conversionMode = "all";
+
+
+        /* =========================================
+           OPEN FILE PICKER
+        ========================================= */
+
+        chooseButton.addEventListener(
+            "click",
+            () => {
+                pdfInput.click();
+            }
+        );
+
+
+        /* =========================================
+           FILE INPUT
+        ========================================= */
+
+        pdfInput.addEventListener(
+            "change",
+            async () => {
+
+                const file =
+                    pdfInput.files[0];
+
+                if (file) {
+                    await loadPDF(file);
+                }
+
+                pdfInput.value = "";
+
+            }
+        );
+
+
+        /* =========================================
+           DRAG AND DROP
+        ========================================= */
+
+        uploadBox.addEventListener(
+            "dragover",
+            (event) => {
+
+                event.preventDefault();
+
+                uploadBox.classList.add(
+                    "drag-over"
+                );
+
+            }
+        );
+
+
+        uploadBox.addEventListener(
+            "dragleave",
+            () => {
+
+                uploadBox.classList.remove(
+                    "drag-over"
+                );
+
+            }
+        );
+
+
+        uploadBox.addEventListener(
+            "drop",
+            async (event) => {
+
+                event.preventDefault();
+
+                uploadBox.classList.remove(
+                    "drag-over"
+                );
+
+                const file =
+                    event.dataTransfer.files[0];
+
+                if (file) {
+                    await loadPDF(file);
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           LOAD PDF
+        ========================================= */
+
+        async function loadPDF(file) {
+
+            const isPDF =
+                file.type === "application/pdf" ||
+                file.name
+                    .toLowerCase()
+                    .endsWith(".pdf");
+
+
+            if (!isPDF) {
+
+                showStatus(
+                    "Please upload a valid PDF file.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                showStatus(
+                    "Loading your PDF...",
+                    "processing"
+                );
+
+
+                const bytes =
+                    await file.arrayBuffer();
+
+
+                pdfDocument =
+                    await pdfjsLib.getDocument({
+                        data: bytes
+                    }).promise;
+
+
+                selectedFile = file;
+
+
+                fileName.textContent =
+                    file.name;
+
+
+                fileMeta.textContent =
+                    `${pdfDocument.numPages} page${
+                        pdfDocument.numPages === 1
+                            ? ""
+                            : "s"
+                    } • ${
+                        formatFileSize(
+                            file.size
+                        )
+                    }`;
+
+
+                fileInfo.classList.add(
+                    "show"
+                );
+
+
+                settings.classList.add(
+                    "show"
+                );
+
+
+                previewSection.classList.add(
+                    "show"
+                );
+
+
+                selectedPages = new Set();
+
+
+                for (
+                    let i = 1;
+                    i <= pdfDocument.numPages;
+                    i++
+                ) {
+
+                    selectedPages.add(i);
+
+                }
+
+
+                await renderPreviews();
+
+
+                conversionMode = "all";
+
+                updateModeButtons();
+
+                updateSelectionInfo();
+
+                updateConvertButton();
+
+
+                showStatus(
+                    "PDF loaded successfully.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showStatus(
+                    "We couldn't read this PDF. It may be corrupted or unsupported.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           RENDER PAGE PREVIEWS
+        ========================================= */
+
+        async function renderPreviews() {
+
+            pageGrid.innerHTML = "";
+
+            pages = [];
+
+
+            for (
+                let pageNumber = 1;
+                pageNumber <= pdfDocument.numPages;
+                pageNumber++
+            ) {
+
+                const page =
+                    await pdfDocument.getPage(
+                        pageNumber
+                    );
+
+
+                const viewport =
+                    page.getViewport({
+                        scale: 0.75
+                    });
+
+
+                const canvas =
+                    document.createElement(
+                        "canvas"
+                    );
+
+
+                const context =
+                    canvas.getContext(
+                        "2d"
+                    );
+
+
+                canvas.width =
+                    viewport.width;
+
+                canvas.height =
+                    viewport.height;
+
+
+                await page.render({
+                    canvasContext: context,
+                    viewport
+                }).promise;
+
+
+                pages.push({
+                    pageNumber,
+                    page,
+                    canvas
+                });
+
+
+                createPageCard(
+                    pageNumber,
+                    canvas
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           CREATE PAGE CARD
+        ========================================= */
+
+        function createPageCard(
+            pageNumber,
+            canvas
+        ) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "page-card selected";
+
+
+            const preview =
+                document.createElement(
+                    "div"
+                );
+
+            preview.className =
+                "page-preview";
+
+
+            preview.appendChild(canvas);
+
+
+            const footer =
+                document.createElement(
+                    "div"
+                );
+
+            footer.className =
+                "page-footer";
+
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className =
+                "page-number";
+
+            number.textContent =
+                `Page ${pageNumber}`;
+
+
+            const checkbox =
+                document.createElement(
+                    "input"
+                );
+
+            checkbox.type =
+                "checkbox";
+
+            checkbox.className =
+                "page-check";
+
+            checkbox.checked = true;
+
+
+            checkbox.addEventListener(
+                "click",
+                (event) => {
+
+                    event.stopPropagation();
+
+                }
+            );
+
+
+            checkbox.addEventListener(
+                "change",
+                () => {
+
+                    togglePage(
+                        pageNumber,
+                        checkbox.checked,
+                        card
+                    );
+
+                }
+            );
+
+
+            footer.appendChild(number);
+
+            footer.appendChild(checkbox);
+
+
+            card.appendChild(preview);
+
+            card.appendChild(footer);
+
+
+            card.addEventListener(
+                "click",
+                () => {
+
+                    checkbox.checked =
+                        !checkbox.checked;
+
+                    togglePage(
+                        pageNumber,
+                        checkbox.checked,
+                        card
+                    );
+
+                }
+            );
+
+
+            pageGrid.appendChild(card);
+
+        }
+
+
+        /* =========================================
+           TOGGLE PAGE
+        ========================================= */
+
+        function togglePage(
+            pageNumber,
+            isSelected,
+            card
+        ) {
+
+            if (isSelected) {
+
+                selectedPages.add(
+                    pageNumber
+                );
+
+                card.classList.add(
+                    "selected"
+                );
+
+            } else {
+
+                selectedPages.delete(
+                    pageNumber
+                );
+
+                card.classList.remove(
+                    "selected"
+                );
+
+            }
+
+
+            updateSelectionInfo();
+
+            updateConvertButton();
+
+        }
+
+
+        /* =========================================
+           ALL PAGES
+        ========================================= */
+
+        allPagesButton.addEventListener(
+            "click",
+            () => {
+
+                conversionMode = "all";
+
+                selectAllPages();
+
+                updateModeButtons();
+
+            }
+        );
+
+
+        /* =========================================
+           SELECTED PAGES
+        ========================================= */
+
+        selectedPagesButton.addEventListener(
+            "click",
+            () => {
+
+                conversionMode =
+                    "selected";
+
+                updateModeButtons();
+
+            }
+        );
+
+
+        /* =========================================
+           SELECT ALL
+        ========================================= */
+
+        selectAllButton.addEventListener(
+            "click",
+            () => {
+
+                selectAllPages();
+
+            }
+        );
+
+
+        function selectAllPages() {
+
+            selectedPages.clear();
+
+
+            for (
+                let i = 1;
+                i <= pdfDocument.numPages;
+                i++
+            ) {
+
+                selectedPages.add(i);
+
+            }
+
+
+            document
+                .querySelectorAll(
+                    ".page-card"
+                )
+                .forEach(
+                    (card) => {
+
+                        card.classList.add(
+                            "selected"
+                        );
+
+                        const checkbox =
+                            card.querySelector(
+                                ".page-check"
+                            );
+
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+
+                    }
+                );
+
+
+            updateSelectionInfo();
+
+            updateConvertButton();
+
+        }
+
+
+        /* =========================================
+           CLEAR
+        ========================================= */
+
+        clearButton.addEventListener(
+            "click",
+            () => {
+
+                selectedPages.clear();
+
+
+                document
+                    .querySelectorAll(
+                        ".page-card"
+                    )
+                    .forEach(
+                        (card) => {
+
+                            card.classList.remove(
+                                "selected"
+                            );
+
+                            const checkbox =
+                                card.querySelector(
+                                    ".page-check"
+                                );
+
+                            if (checkbox) {
+                                checkbox.checked = false;
+                            }
+
+                        }
+                    );
+
+
+                updateSelectionInfo();
+
+                updateConvertButton();
+
+            }
+        );
+
+
+        /* =========================================
+           MODE BUTTONS
+        ========================================= */
+
+        function updateModeButtons() {
+
+            allPagesButton.classList.toggle(
+                "active",
+                conversionMode === "all"
+            );
+
+
+            selectedPagesButton.classList.toggle(
+                "active",
+                conversionMode === "selected"
+            );
+
+
+            if (conversionMode === "all") {
+                selectAllPages();
+            }
+
+        }
+
+
+        /* =========================================
+           SELECTION INFO
+        ========================================= */
+
+        function updateSelectionInfo() {
+
+            const count =
+                selectedPages.size;
+
+
+            if (
+                conversionMode === "all"
+            ) {
+
+                selectionInfo.textContent =
+                    `All ${pdfDocument?.numPages || 0} pages selected`;
+
+            } else {
+
+                selectionInfo.textContent =
+                    `${count} page${
+                        count === 1
+                            ? ""
+                            : "s"
+                    } selected`;
+
+            }
+
+        }
+
+
+        /* =========================================
+           CONVERT BUTTON
+        ========================================= */
+
+        function updateConvertButton() {
+
+            convertButton.disabled =
+                !selectedFile ||
+                selectedPages.size === 0;
+
+        }
+
+
+        /* =========================================
+           CONVERT TO JPG
+        ========================================= */
+
+        convertButton.addEventListener(
+            "click",
+            async () => {
+
+                if (
+                    !pdfDocument ||
+                    !selectedFile ||
+                    selectedPages.size === 0
+                ) {
+
+                    showStatus(
+                        "Please select at least one page.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                try {
+
+                    convertButton.disabled =
+                        true;
+
+
+                    const quality =
+                        Number(
+                            qualitySelect.value
+                        );
+
+
+                    const pageNumbers =
+                        Array.from(
+                            selectedPages
+                        ).sort(
+                            (a, b) => a - b
+                        );
+
+
+                    showStatus(
+                        "Converting your PDF pages...",
+                        "processing"
+                    );
+
+
+                    const zip =
+                        pageNumbers.length > 1
+                            ? new JSZip()
+                            : null;
+
+
+                    for (
+                        let i = 0;
+                        i < pageNumbers.length;
+                        i++
+                    ) {
+
+                        const pageNumber =
+                            pageNumbers[i];
+
+
+                        const page =
+                            await pdfDocument
+                                .getPage(
+                                    pageNumber
+                                );
+
+
+                        const viewport =
+                            page.getViewport({
+                                scale: quality
+                            });
+
+
+                        const canvas =
+                            document.createElement(
+                                "canvas"
+                            );
+
+
+                        canvas.width =
+                            Math.ceil(
+                                viewport.width
+                            );
+
+                        canvas.height =
+                            Math.ceil(
+                                viewport.height
+                            );
+
+
+                        const context =
+                            canvas.getContext(
+                                "2d"
+                            );
+
+
+                        await page.render({
+                            canvasContext: context,
+                            viewport
+                        }).promise;
+
+
+                        const blob =
+                            await canvasToJPG(
+                                canvas
+                            );
+
+
+                        const filename =
+                            `${removeExtension(
+                                selectedFile.name
+                            )}-page-${pageNumber}.jpg`;
+
+
+                        if (zip) {
+
+                            zip.file(
+                                filename,
+                                blob
+                            );
+
+                        } else {
+
+                            downloadBlob(
+                                blob,
+                                filename
+                            );
+
+                        }
+
+
+                        canvas.width = 1;
+                        canvas.height = 1;
+
+                    }
+
+
+                    if (zip) {
+
+                        const zipBlob =
+                            await zip.generateAsync({
+                                type: "blob"
+                            });
+
+
+                        downloadBlob(
+                            zipBlob,
+                            `${removeExtension(
+                                selectedFile.name
+                            )}-jpg.zip`
+                        );
+
+
+                        showStatus(
+                            `✓ Converted ${pageNumbers.length} pages to JPG and downloaded them as a ZIP.`,
+                            "success"
+                        );
+
+                    } else {
+
+                        showStatus(
+                            "✓ Your PDF page was converted to JPG and downloaded.",
+                            "success"
+                        );
+
+                    }
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showStatus(
+                        "We couldn't convert the PDF to JPG. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    updateConvertButton();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           CANVAS TO JPG
+        ========================================= */
+
+        function canvasToJPG(canvas) {
+
+            return new Promise(
+                (resolve, reject) => {
+
+                    canvas.toBlob(
+                        (blob) => {
+
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject(
+                                    new Error(
+                                        "JPG conversion failed."
+                                    )
+                                );
+                            }
+
+                        },
+                        "image/jpeg",
+                        0.92
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           DOWNLOAD
+        ========================================= */
+
+        function downloadBlob(
+            blob,
+            filename
+        ) {
+
+            const url =
+                URL.createObjectURL(blob);
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href = url;
+
+            link.download = filename;
+
+
+            document.body.appendChild(
+                link
+            );
+
+
+            link.click();
+
+            link.remove();
+
+
+            setTimeout(
+                () => {
+                    URL.revokeObjectURL(url);
+                },
+                1000
+            );
+
+        }
+
+
+        /* =========================================
+           RESET
+        ========================================= */
+
+        resetButton.addEventListener(
+            "click",
+            () => {
+
+                selectedFile = null;
+
+                pdfDocument = null;
+
+                pages = [];
+
+                selectedPages.clear();
+
+                conversionMode = "all";
+
+                pdfInput.value = "";
+
+                pageGrid.innerHTML = "";
+
+                fileName.textContent = "";
+
+                fileMeta.textContent = "";
+
+                fileInfo.classList.remove(
+                    "show"
+                );
+
+                settings.classList.remove(
+                    "show"
+                );
+
+                previewSection.classList.remove(
+                    "show"
+                );
+
+                status.className =
+                    "status";
+
+                status.textContent = "";
+
+                convertButton.disabled =
+                    true;
+
+            }
+        );
+
+
+        /* =========================================
+           FILE SIZE
+        ========================================= */
+
+        function formatFileSize(bytes) {
+
+            if (bytes === 0) {
+                return "0 Bytes";
+            }
+
+
+            const units = [
+                "Bytes",
+                "KB",
+                "MB",
+                "GB"
+            ];
+
+
+            const index =
+                Math.floor(
+                    Math.log(bytes) /
+                    Math.log(1024)
+                );
+
+
+            const size =
+                bytes /
+                Math.pow(
+                    1024,
+                    index
+                );
+
+
+            return `${size.toFixed(2)} ${
+                units[index]
+            } ${units[index] ? "" : ""}`;
+
+        }
+
+
+        /* =========================================
+           REMOVE EXTENSION
+        ========================================= */
+
+        function removeExtension(
+            filename
+        ) {
+
+            return filename.replace(
+                /\.pdf$/i,
+                ""
+            );
+
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================= */
+
+        function showStatus(
+            message,
+            type
+        ) {
+
+            status.textContent =
+                message;
+
+            status.className =
+                `status show ${type}`;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

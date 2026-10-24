@@ -1,0 +1,715 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JPG to PDF Online Free — PDFMaster</title>
+    <meta name="description" content="Convert JPG images into a PDF document online with PDFMaster. Arrange, rotate and resize your images before downloading.">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .jpg-container {
+            width: min(1000px, 92%);
+            margin: auto;
+            padding: 65px 0;
+        }
+
+        .jpg-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .jpg-heading h1 {
+            font-size: clamp(34px, 5vw, 46px);
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .jpg-heading p {
+            color: #64748b;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .jpg-card {
+            padding: 28px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .07);
+        }
+
+        .jpg-upload {
+            padding: 40px 20px;
+            border: 2px dashed #bfdbfe;
+            border-radius: 15px;
+            text-align: center;
+            transition: background .2s, border-color .2s;
+        }
+
+        .jpg-upload.drag-over {
+            background: #eff6ff;
+            border-color: #2563eb;
+        }
+
+        .jpg-upload h2 {
+            font-size: 21px;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .jpg-upload p {
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        .jpg-file-input { display: none; }
+
+        .jpg-button {
+            border: 0;
+            border-radius: 9px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .jpg-button:hover { background: #1d4ed8; }
+
+        .jpg-button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .jpg-secondary {
+            padding: 11px 17px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #1e293b;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .jpg-secondary:hover { background: #f1f5f9; }
+
+        .jpg-section { margin-top: 28px; }
+
+        .jpg-section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+
+        .jpg-file-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .jpg-file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 13px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            min-width: 0;
+        }
+
+        .jpg-file-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .jpg-preview {
+            width: 68px;
+            height: 78px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 7px;
+            background: #f1f5f9;
+        }
+
+        .jpg-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .jpg-details {
+            min-width: 0;
+        }
+
+        .jpg-details strong {
+            display: block;
+            overflow-wrap: anywhere;
+        }
+
+        .jpg-details span {
+            display: block;
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .jpg-file-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .jpg-mini {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .jpg-mini:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+        .jpg-remove { color: #dc2626; }
+
+        .jpg-settings {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .jpg-setting {
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+        }
+
+        .jpg-setting label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 9px;
+        }
+
+        .jpg-setting select {
+            width: 100%;
+            padding: 11px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+
+        .jpg-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .jpg-status {
+            display: none;
+            margin-top: 22px;
+            padding: 14px;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .jpg-status.show { display: block; }
+        .jpg-status.error { background: #fef2f2; color: #b91c1c; }
+        .jpg-status.success { background: #f0fdf4; color: #166534; }
+        .jpg-status.processing { background: #eff6ff; color: #1d4ed8; }
+
+        .jpg-empty {
+            padding: 20px;
+            color: #64748b;
+            text-align: center;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .jpg-note {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .jpg-container { padding: 40px 0; }
+            .jpg-card { padding: 16px; }
+            .jpg-settings { grid-template-columns: 1fr; }
+            .jpg-file { align-items: flex-start; }
+            .jpg-file-actions { max-width: 115px; }
+            .jpg-mini { width: 31px; height: 31px; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="jpg-container">
+
+    <header class="jpg-heading">
+        <h1>JPG to PDF</h1>
+        <p>Turn your JPG images into a PDF. Arrange the images, rotate them, and choose your preferred page size.</p>
+    </header>
+
+    <section class="jpg-card">
+
+        <div class="jpg-upload" id="jpgUpload" tabindex="0">
+            <h2>Drop your JPG images here</h2>
+            <p>Choose one or several JPG or JPEG images.</p>
+
+            <input class="jpg-file-input" id="jpgInput"
+                   type="file" accept=".jpg,.jpeg,image/jpeg" multiple>
+
+            <button type="button" class="jpg-button" id="jpgChoose">
+                Choose JPG Images
+            </button>
+        </div>
+
+        <section class="jpg-section">
+            <h2>Your images <span id="jpgCount">(0)</span></h2>
+
+            <div class="jpg-file-list" id="jpgFileList">
+                <div class="jpg-empty">No images selected yet.</div>
+            </div>
+
+            <p class="jpg-note">
+                Use ↑ and ↓ to change page order. Rotate an image before creating your PDF.
+                Images are processed locally in your browser.
+            </p>
+
+            <button type="button" class="jpg-secondary" id="jpgAddMore" style="margin-top:12px">
+                + Add More Images
+            </button>
+        </section>
+
+        <section class="jpg-section">
+            <h2>PDF settings</h2>
+
+            <div class="jpg-settings">
+                <div class="jpg-setting">
+                    <label for="jpgPageSize">Page size</label>
+                    <select id="jpgPageSize">
+                        <option value="a4">A4</option>
+                        <option value="letter">US Letter</option>
+                        <option value="fit">Fit page to image</option>
+                    </select>
+                </div>
+
+                <div class="jpg-setting">
+                    <label for="jpgOrientation">Page orientation</label>
+                    <select id="jpgOrientation">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                    <p class="jpg-note">Orientation applies to A4 and US Letter.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="jpg-actions">
+            <button type="button" class="jpg-button" id="jpgCreate" disabled>
+                Create PDF
+            </button>
+            <button type="button" class="jpg-secondary" id="jpgReset">
+                Start Again
+            </button>
+        </div>
+
+        <div class="jpg-status" id="jpgStatus" role="status" aria-live="polite"></div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script>
+(() => {
+    "use strict";
+
+    const input = document.getElementById("jpgInput");
+    const upload = document.getElementById("jpgUpload");
+    const choose = document.getElementById("jpgChoose");
+    const addMore = document.getElementById("jpgAddMore");
+    const list = document.getElementById("jpgFileList");
+    const count = document.getElementById("jpgCount");
+    const create = document.getElementById("jpgCreate");
+    const reset = document.getElementById("jpgReset");
+    const pageSize = document.getElementById("jpgPageSize");
+    const orientation = document.getElementById("jpgOrientation");
+    const status = document.getElementById("jpgStatus");
+
+    const MAX_FILE_SIZE = 25 * 1024 * 1024;
+    let images = [];
+    let nextId = 1;
+    let busy = false;
+
+    function showStatus(message, type = "processing") {
+        status.textContent = message;
+        status.className = `jpg-status show ${type}`;
+    }
+
+    function clearStatus() {
+        status.textContent = "";
+        status.className = "jpg-status";
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return `${bytes} Bytes`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    function isJPG(file) {
+        return file.type === "image/jpeg" || /\.(jpe?g)$/i.test(file.name);
+    }
+
+    function addFiles(files) {
+        if (busy) return;
+
+        let added = 0;
+        const errors = [];
+
+        for (const file of files) {
+            if (!isJPG(file)) {
+                errors.push(`${file.name}: JPG/JPEG files only.`);
+                continue;
+            }
+
+            if (!file.size || file.size > MAX_FILE_SIZE) {
+                errors.push(`${file.name}: empty files and files over 25 MB are not accepted.`);
+                continue;
+            }
+
+            images.push({
+                id: nextId++,
+                file,
+                url: URL.createObjectURL(file),
+                rotation: 0
+            });
+
+            added++;
+        }
+
+        renderFiles();
+
+        if (errors.length) {
+            showStatus(errors.join(" "), "error");
+        } else if (added) {
+            clearStatus();
+        }
+    }
+
+    function makeButton(text, label, className = "jpg-mini") {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = className;
+        button.textContent = text;
+        button.setAttribute("aria-label", label);
+        return button;
+    }
+
+    function renderFiles() {
+        list.replaceChildren();
+        count.textContent = `(${images.length})`;
+        create.disabled = !images.length || busy;
+        choose.disabled = busy;
+        addMore.disabled = busy;
+        reset.disabled = busy;
+
+        if (!images.length) {
+            const empty = document.createElement("div");
+            empty.className = "jpg-empty";
+            empty.textContent = "No images selected yet.";
+            list.appendChild(empty);
+            return;
+        }
+
+        images.forEach((entry, index) => {
+            const row = document.createElement("div");
+            row.className = "jpg-file";
+
+            const left = document.createElement("div");
+            left.className = "jpg-file-left";
+
+            const preview = document.createElement("div");
+            preview.className = "jpg-preview";
+
+            const img = document.createElement("img");
+            img.src = entry.url;
+            img.alt = `Preview of ${entry.file.name}`;
+            img.style.transform = `rotate(${entry.rotation}deg)`;
+            preview.appendChild(img);
+
+            const details = document.createElement("div");
+            details.className = "jpg-details";
+
+            const name = document.createElement("strong");
+            name.textContent = entry.file.name;
+
+            const meta = document.createElement("span");
+            meta.textContent = `${formatSize(entry.file.size)} · Rotation ${entry.rotation}°`;
+
+            details.append(name, meta);
+            left.append(preview, details);
+
+            const actions = document.createElement("div");
+            actions.className = "jpg-file-actions";
+
+            const up = makeButton("↑", `Move ${entry.file.name} up`);
+            up.disabled = index === 0 || busy;
+            up.addEventListener("click", () => moveImage(index, -1));
+
+            const down = makeButton("↓", `Move ${entry.file.name} down`);
+            down.disabled = index === images.length - 1 || busy;
+            down.addEventListener("click", () => moveImage(index, 1));
+
+            const rotate = makeButton("↻", `Rotate ${entry.file.name} by 90 degrees`);
+            rotate.disabled = busy;
+            rotate.addEventListener("click", () => {
+                entry.rotation = (entry.rotation + 90) % 360;
+                renderFiles();
+            });
+
+            const remove = makeButton("×", `Remove ${entry.file.name}`, "jpg-mini jpg-remove");
+            remove.disabled = busy;
+            remove.addEventListener("click", () => removeImage(entry.id));
+
+            actions.append(up, down, rotate, remove);
+            row.append(left, actions);
+            list.appendChild(row);
+        });
+    }
+
+    function moveImage(index, direction) {
+        const destination = index + direction;
+        if (destination < 0 || destination >= images.length || busy) return;
+
+        [images[index], images[destination]] = [images[destination], images[index]];
+        renderFiles();
+    }
+
+    function removeImage(id) {
+        const index = images.findIndex(item => item.id === id);
+        if (index < 0 || busy) return;
+
+        URL.revokeObjectURL(images[index].url);
+        images.splice(index, 1);
+        renderFiles();
+        clearStatus();
+    }
+
+    function loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = () => reject(new Error("An image could not be read."));
+            image.src = url;
+        });
+    }
+
+    async function rotatedJPEG(entry) {
+        const image = await loadImage(entry.url);
+        const angle = entry.rotation * Math.PI / 180;
+        const sideways = entry.rotation === 90 || entry.rotation === 270;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = sideways ? image.naturalHeight : image.naturalWidth;
+        canvas.height = sideways ? image.naturalWidth : image.naturalHeight;
+
+        const context = canvas.getContext("2d");
+        if (!context) throw new Error("This browser could not prepare an image.");
+
+        context.translate(canvas.width / 2, canvas.height / 2);
+        context.rotate(angle);
+        context.drawImage(image, -image.naturalWidth / 2, -image.naturalHeight / 2);
+
+        const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob(result => {
+                if (result) resolve(result);
+                else reject(new Error("An image could not be prepared."));
+            }, "image/jpeg", 0.95);
+        });
+
+        canvas.width = 1;
+        canvas.height = 1;
+        return new Uint8Array(await blob.arrayBuffer());
+    }
+
+    function getPageDimensions(imageWidth, imageHeight) {
+        if (pageSize.value === "fit") {
+            // Convert pixels to PDF points at 96 pixels per inch.
+            return {
+                width: imageWidth * 72 / 96,
+                height: imageHeight * 72 / 96
+            };
+        }
+
+        let width;
+        let height;
+
+        if (pageSize.value === "letter") {
+            width = 612;
+            height = 792;
+        } else {
+            width = 595.28;
+            height = 841.89;
+        }
+
+        if (orientation.value === "landscape") {
+            [width, height] = [height, width];
+        }
+
+        return { width, height };
+    }
+
+    async function createPDF() {
+        if (busy || !images.length) return;
+
+        if (!window.PDFLib) {
+            showStatus("The PDF library did not load. Check your internet connection and refresh the page.", "error");
+            return;
+        }
+
+        busy = true;
+        renderFiles();
+        showStatus("Preparing your images and creating the PDF...", "processing");
+
+        try {
+            const pdf = await PDFLib.PDFDocument.create();
+
+            for (let i = 0; i < images.length; i++) {
+                showStatus(`Processing image ${i + 1} of ${images.length}...`, "processing");
+
+                const entry = images[i];
+                const jpgBytes = await rotatedJPEG(entry);
+                const jpg = await pdf.embedJpg(jpgBytes);
+
+                const dimensions = getPageDimensions(jpg.width, jpg.height);
+                const page = pdf.addPage([dimensions.width, dimensions.height]);
+
+                const margin = pageSize.value === "fit" ? 0 : 30;
+                const availableWidth = Math.max(1, dimensions.width - margin * 2);
+                const availableHeight = Math.max(1, dimensions.height - margin * 2);
+
+                const scale = Math.min(
+                    availableWidth / jpg.width,
+                    availableHeight / jpg.height
+                );
+
+                const drawWidth = jpg.width * scale;
+                const drawHeight = jpg.height * scale;
+
+                page.drawImage(jpg, {
+                    x: (dimensions.width - drawWidth) / 2,
+                    y: (dimensions.height - drawHeight) / 2,
+                    width: drawWidth,
+                    height: drawHeight
+                });
+            }
+
+            const bytes = await pdf.save();
+            const blob = new Blob([bytes], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "PDFMaster-Images.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showStatus(`Done! Created a PDF containing ${images.length} image page${images.length === 1 ? "" : "s"}.`, "success");
+        } catch (error) {
+            console.error(error);
+            showStatus("We couldn't create the PDF. Check that the images are valid JPG files, then try again.", "error");
+        } finally {
+            busy = false;
+            renderFiles();
+        }
+    }
+
+    choose.addEventListener("click", () => {
+        if (!busy) input.click();
+    });
+
+    addMore.addEventListener("click", () => {
+        if (!busy) input.click();
+    });
+
+    upload.addEventListener("click", event => {
+        if (event.target.closest("button")) return;
+        input.click();
+    });
+
+    upload.addEventListener("keydown", event => {
+        if (event.target !== upload) return;
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            input.click();
+        }
+    });
+
+    input.addEventListener("change", () => {
+        addFiles(Array.from(input.files || []));
+        input.value = "";
+    });
+
+    upload.addEventListener("dragover", event => {
+        event.preventDefault();
+        upload.classList.add("drag-over");
+    });
+
+    upload.addEventListener("dragleave", () => {
+        upload.classList.remove("drag-over");
+    });
+
+    upload.addEventListener("drop", event => {
+        event.preventDefault();
+        upload.classList.remove("drag-over");
+        addFiles(Array.from(event.dataTransfer.files || []));
+    });
+
+    create.addEventListener("click", createPDF);
+
+    reset.addEventListener("click", () => {
+        if (busy) return;
+        images.forEach(entry => URL.revokeObjectURL(entry.url));
+        images = [];
+        input.value = "";
+        renderFiles();
+        clearStatus();
+    });
+
+    renderFiles();
+})();
+</script>
+</body>
+</html>

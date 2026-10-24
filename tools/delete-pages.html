@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete PDF Pages Online Free — PDFMaster</title>
+    <meta name="description" content="Delete unwanted pages from PDF documents online with PDFMaster. Select the pages to remove and download your updated PDF.">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .delete-container {
+            width: min(1000px, 92%);
+            margin: auto;
+            padding: 60px 0;
+        }
+
+        .delete-heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .delete-heading h1 {
+            color: #0f172a;
+            font-size: clamp(34px, 5vw, 46px);
+            margin-bottom: 12px;
+        }
+
+        .delete-heading p {
+            max-width: 680px;
+            margin: auto;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .delete-card {
+            padding: 28px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .07);
+        }
+
+        .upload-box {
+            padding: 40px 20px;
+            border: 2px dashed #bfdbfe;
+            border-radius: 15px;
+            text-align: center;
+            transition: background .2s, border-color .2s;
+        }
+
+        .upload-box.drag-over {
+            background: #eff6ff;
+            border-color: #2563eb;
+        }
+
+        .upload-box h2 {
+            color: #0f172a;
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .upload-box p {
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        #pdfInput { display: none; }
+
+        .primary-button {
+            border: 0;
+            border-radius: 9px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary-button:hover { background: #1d4ed8; }
+
+        .secondary-button {
+            padding: 11px 17px;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            background: #fff;
+            color: #1e293b;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .secondary-button:hover { background: #f1f5f9; }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 18px;
+            padding: 15px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .file-info.show { display: block; }
+
+        .file-info strong { color: #1e293b; }
+
+        .file-info p {
+            color: #64748b;
+            font-size: 13px;
+            margin: 5px 0 0;
+        }
+
+        .pages-section {
+            display: none;
+            margin-top: 28px;
+        }
+
+        .pages-section.show { display: block; }
+
+        .pages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .pages-header h2 {
+            color: #0f172a;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .selection-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .small-button {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            color: #1e293b;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .small-button:hover { background: #f1f5f9; }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .page-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+            background: #fff;
+            cursor: pointer;
+            transition: border-color .15s, background .15s;
+        }
+
+        .page-card:hover {
+            border-color: #93c5fd;
+        }
+
+        .page-card:has(input:checked) {
+            border-color: #fca5a5;
+            background: #fef2f2;
+        }
+
+        .page-card input {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            accent-color: #dc2626;
+        }
+
+        .page-number {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .selection-summary {
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .selection-summary.warning {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .delete-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .delete-button {
+            border: 0;
+            border-radius: 9px;
+            padding: 13px 22px;
+            background: #dc2626;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .delete-button:hover { background: #b91c1c; }
+
+        .status {
+            display: none;
+            margin-top: 21px;
+            padding: 14px;
+            border-radius: 9px;
+            text-align: center;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .status.show { display: block; }
+        .status.success { background: #f0fdf4; color: #166534; }
+        .status.error { background: #fef2f2; color: #b91c1c; }
+        .status.processing { background: #eff6ff; color: #1d4ed8; }
+
+        .privacy-note {
+            margin-top: 19px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        @media (max-width: 750px) {
+            .page-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 550px) {
+            .delete-container { padding: 38px 0; }
+            .delete-card { padding: 17px; }
+            .page-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .delete-actions > button { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="delete-container">
+
+    <header class="delete-heading">
+        <h1>Delete PDF Pages</h1>
+        <p>
+            Remove unwanted pages from your PDF document.
+            Select the pages you want to delete, then download
+            a new PDF containing the remaining pages.
+        </p>
+    </header>
+
+    <section class="delete-card">
+
+        <div class="upload-box" id="uploadBox" tabindex="0">
+            <h2>Drop your PDF here</h2>
+            <p>Or choose a PDF from your computer.</p>
+
+            <input
+                type="file"
+                id="pdfInput"
+                accept=".pdf,application/pdf"
+            >
+
+            <button type="button" class="primary-button" id="chooseButton">
+                Choose PDF
+            </button>
+        </div>
+
+        <div class="file-info" id="fileInfo">
+            <strong id="fileName"></strong>
+            <p id="fileMeta"></p>
+        </div>
+
+        <section class="pages-section" id="pagesSection">
+
+            <div class="pages-header">
+                <h2>Select pages to delete</h2>
+
+                <div class="selection-controls">
+                    <button type="button" class="small-button" id="selectAllButton">
+                        Select All
+                    </button>
+
+                    <button type="button" class="small-button" id="clearButton">
+                        Clear Selection
+                    </button>
+                </div>
+            </div>
+
+            <div class="page-grid" id="pageGrid"></div>
+
+            <div class="selection-summary" id="selectionSummary">
+                No pages selected.
+            </div>
+
+        </section>
+
+        <div class="delete-actions">
+
+            <button type="button" class="delete-button" id="deleteButton" disabled>
+                Delete Selected Pages
+            </button>
+
+            <button type="button" class="secondary-button" id="resetButton">
+                Start Again
+            </button>
+
+        </div>
+
+        <div
+            class="status"
+            id="status"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+        <p class="privacy-note">
+            Your PDF is processed in your browser. It is not uploaded
+            to a PDFMaster server by this tool. You must leave at least
+            one page in the resulting PDF.
+        </p>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script>
+(() => {
+    "use strict";
+
+    const input = document.getElementById("pdfInput");
+    const uploadBox = document.getElementById("uploadBox");
+    const chooseButton = document.getElementById("chooseButton");
+    const fileInfo = document.getElementById("fileInfo");
+    const fileName = document.getElementById("fileName");
+    const fileMeta = document.getElementById("fileMeta");
+    const pagesSection = document.getElementById("pagesSection");
+    const pageGrid = document.getElementById("pageGrid");
+    const selectionSummary = document.getElementById("selectionSummary");
+    const selectAllButton = document.getElementById("selectAllButton");
+    const clearButton = document.getElementById("clearButton");
+    const deleteButton = document.getElementById("deleteButton");
+    const resetButton = document.getElementById("resetButton");
+    const status = document.getElementById("status");
+
+    let originalBytes = null;
+    let selectedFile = null;
+    let pageCount = 0;
+    let busy = false;
+
+    function showStatus(message, type = "processing") {
+        status.textContent = message;
+        status.className = `status show ${type}`;
+    }
+
+    function clearStatus() {
+        status.textContent = "";
+        status.className = "status";
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return `${bytes} Bytes`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    function getSelectedPages() {
+        return Array.from(
+            pageGrid.querySelectorAll('input[type="checkbox"]:checked')
+        ).map(checkbox => Number(checkbox.value));
+    }
+
+    function updateSelection() {
+        const selected = getSelectedPages();
+        const remaining = pageCount - selected.length;
+
+        selectionSummary.classList.toggle(
+            "warning",
+            remaining === 0 && pageCount > 0
+        );
+
+        if (selected.length === 0) {
+            selectionSummary.textContent =
+                `${pageCount} pages in the PDF. No pages selected for deletion.`;
+        } else if (remaining === 0) {
+            selectionSummary.textContent =
+                "You selected every page. Keep at least one page in the PDF.";
+        } else {
+            selectionSummary.textContent =
+                `${selected.length} page${selected.length === 1 ? "" : "s"} selected for deletion. ${remaining} page${remaining === 1 ? "" : "s"} will remain.`;
+        }
+
+        deleteButton.disabled =
+            !originalBytes ||
+            selected.length === 0 ||
+            remaining < 1 ||
+            busy;
+    }
+
+    function renderPages() {
+        pageGrid.replaceChildren();
+
+        for (let page = 1; page <= pageCount; page++) {
+            const label = document.createElement("label");
+            label.className = "page-card";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = String(page);
+            checkbox.setAttribute(
+                "aria-label",
+                `Select page ${page} for deletion`
+            );
+
+            checkbox.addEventListener("change", updateSelection);
+
+            const text = document.createElement("span");
+            text.className = "page-number";
+            text.textContent = `Page ${page}`;
+
+            label.append(checkbox, text);
+            pageGrid.appendChild(label);
+        }
+
+        updateSelection();
+    }
+
+    async function loadPDF(file) {
+        if (busy) return;
+
+        const isPDF =
+            file.type === "application/pdf" ||
+            /\.pdf$/i.test(file.name);
+
+        if (!isPDF) {
+            showStatus("Please select a PDF file.", "error");
+            return;
+        }
+
+        if (!file.size) {
+            showStatus("This file appears to be empty.", "error");
+            return;
+        }
+
+        if (file.size > 100 * 1024 * 1024) {
+            showStatus("This PDF exceeds the 100 MB limit for this tool.", "error");
+            return;
+        }
+
+        busy = true;
+        chooseButton.disabled = true;
+        deleteButton.disabled = true;
+
+        try {
+            showStatus("Loading your PDF...", "processing");
+
+            const bytes = new Uint8Array(await file.arrayBuffer());
+            const pdf = await PDFLib.PDFDocument.load(bytes);
+            const count = pdf.getPageCount();
+
+            if (count < 1) {
+                throw new Error("This PDF has no pages.");
+            }
+
+            originalBytes = bytes;
+            selectedFile = file;
+            pageCount = count;
+
+            fileName.textContent = file.name;
+            fileMeta.textContent =
+                `${pageCount} page${pageCount === 1 ? "" : "s"} · ${formatSize(file.size)}`;
+
+            fileInfo.classList.add("show");
+            pagesSection.classList.add("show");
+
+            renderPages();
+
+            showStatus("PDF loaded successfully.", "success");
+
+        } catch (error) {
+            console.error(error);
+
+            originalBytes = null;
+            selectedFile = null;
+            pageCount = 0;
+
+            fileInfo.classList.remove("show");
+            pagesSection.classList.remove("show");
+            pageGrid.replaceChildren();
+            updateSelection();
+
+            showStatus(
+                "We couldn't read this PDF. It may be corrupted, password-protected, or unsupported.",
+                "error"
+            );
+        } finally {
+            busy = false;
+            chooseButton.disabled = false;
+            updateSelection();
+        }
+    }
+
+    async function deletePages() {
+        if (!originalBytes || !selectedFile || busy) {
+            showStatus("Please choose a PDF first.", "error");
+            return;
+        }
+
+        const selectedPages = getSelectedPages();
+
+        if (selectedPages.length === 0) {
+            showStatus("Select at least one page to delete.", "error");
+            return;
+        }
+
+        if (selectedPages.length >= pageCount) {
+            showStatus(
+                "You cannot delete every page. Clear the selection for at least one page to keep it.",
+                "error"
+            );
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `Delete ${selectedPages.length} page${selectedPages.length === 1 ? "" : "s"} from this PDF? The original file on your computer will not be changed.`
+        );
+
+        if (!confirmed) return;
+
+        busy = true;
+        deleteButton.disabled = true;
+        chooseButton.disabled = true;
+        selectAllButton.disabled = true;
+        clearButton.disabled = true;
+        resetButton.disabled = true;
+
+        try {
+            showStatus("Removing the selected pages...", "processing");
+
+            // Always process a fresh copy of the original file.
+            const workingPDF = await PDFLib.PDFDocument.load(originalBytes);
+
+            // Remove pages from highest index to lowest index so that
+            // deleting earlier pages does not change later indices.
+            const descendingIndices = selectedPages
+                .map(pageNumber => pageNumber - 1)
+                .sort((a, b) => b - a);
+
+            descendingIndices.forEach(index => {
+                workingPDF.removePage(index);
+            });
+
+            const newBytes = await workingPDF.save();
+            const blob = new Blob([newBytes], {
+                type: "application/pdf"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            const baseName = selectedFile.name.replace(/\.pdf$/i, "");
+            link.href = url;
+            link.download = `${baseName}-pages-removed.pdf`;
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+            showStatus(
+                `Done! Removed ${selectedPages.length} page${selectedPages.length === 1 ? "" : "s"}. The downloaded PDF contains ${workingPDF.getPageCount()} remaining page${workingPDF.getPageCount() === 1 ? "" : "s"}.`,
+                "success"
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            showStatus(
+                "We couldn't remove the selected pages. Please check the PDF and try again.",
+                "error"
+            );
+        } finally {
+            busy = false;
+            chooseButton.disabled = false;
+            selectAllButton.disabled = false;
+            clearButton.disabled = false;
+            resetButton.disabled = false;
+            updateSelection();
+        }
+    }
+
+    chooseButton.addEventListener("click", () => {
+        if (!busy) input.click();
+    });
+
+    uploadBox.addEventListener("click", event => {
+        if (event.target.closest("button")) return;
+        if (!busy) input.click();
+    });
+
+    uploadBox.addEventListener("keydown", event => {
+        if (event.target !== uploadBox) return;
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            if (!busy) input.click();
+        }
+    });
+
+    input.addEventListener("change", async () => {
+        const file = input.files?.[0];
+        if (file) await loadPDF(file);
+        input.value = "";
+    });
+
+    uploadBox.addEventListener("dragover", event => {
+        event.preventDefault();
+        uploadBox.classList.add("drag-over");
+    });
+
+    uploadBox.addEventListener("dragleave", () => {
+        uploadBox.classList.remove("drag-over");
+    });
+
+    uploadBox.addEventListener("drop", async event => {
+        event.preventDefault();
+        uploadBox.classList.remove("drag-over");
+
+        const file = event.dataTransfer.files?.[0];
+        if (file) await loadPDF(file);
+    });
+
+    selectAllButton.addEventListener("click", () => {
+        pageGrid.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        updateSelection();
+    });
+
+    clearButton.addEventListener("click", () => {
+        pageGrid.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        clearStatus();
+        updateSelection();
+    });
+
+    deleteButton.addEventListener("click", deletePages);
+
+    resetButton.addEventListener("click", () => {
+        if (busy) return;
+
+        originalBytes = null;
+        selectedFile = null;
+        pageCount = 0;
+        input.value = "";
+
+        fileName.textContent = "";
+        fileMeta.textContent = "";
+
+        fileInfo.classList.remove("show");
+        pagesSection.classList.remove("show");
+        pageGrid.replaceChildren();
+
+        clearStatus();
+        updateSelection();
+    });
+
+    updateSelection();
+})();
+</script>
+</body>
+</html>
